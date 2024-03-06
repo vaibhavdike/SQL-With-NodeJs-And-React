@@ -8,17 +8,22 @@ const [password,setPassword]=useState("");
  const handleClick=async(e)=>{
 e.preventDefault();
 try{
-   
-const res=await axios.get("http://localhost:8000/get", { params : {
-    email: email,
-    password: password,
-},
+console.log(email);
+const res = await axios.get("http://localhost:8000/get", {
+  params: {
+    email: email // Pass email as a query parameter
+  }
 });
-console.log(res);
+console.log(res.data);
+
+
 
 }catch(err){
     console.log(err);
 }
+
+
+
 
  }
  

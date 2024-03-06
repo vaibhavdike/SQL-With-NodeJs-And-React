@@ -39,7 +39,7 @@ connection.connect((err)=>{
 app.post('/user',(req,res)=>{
     var user={username:req.body.username,
         email:req.body.email,
-        password:req.body.password
+        pass:req.body.password
        
     }
 
@@ -58,21 +58,28 @@ app.post('/user',(req,res)=>{
 
 //get user
 
-app.get('/get',(req,res)=>{
-    var email=req.query.email;
-    var password=req.query.password;   
-      var sql="SELECT * FROM user WHERE email= ? AND password= ? ";
-       connection.query(sql,[email,password],function(err,result){
-           if(err){
-            console.log(err);
-           }else{
-            res.status(200).json(result);
-            console.log(result);
-           }
-       })
-});
- 
+app.get('/get', (req, res) => {
+    var email = req.query.email;
+  
+    const sql = "SELECT * FROM user WHERE email = ?";
+    console.log("SQL Query:", sql, "Parameters:", [email]); // Log SQL query and parameters
+    connection.query(sql, [email], function(err, result) {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Internal Server Error' });
+            return; // Return to prevent further execution
+        }
 
+        if (result.length > 0) {
+            // User found, send success response
+            console.log(result);
+            res.status(200).json({ message: 'Login successful', user: result[0] });
+        } else {
+            // User not found
+            res.status(401).json({ error: 'Invalid credentials' });
+        }
+    });
+});
 
 
 //server listen on
